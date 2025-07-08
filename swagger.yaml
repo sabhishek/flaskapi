@@ -1,0 +1,49 @@
+openapi: 3.0.2
+info:
+  title: GitOps API
+  version: 1.0.0
+paths:
+  /api/v1/ns/{action}:
+    post:
+      summary: Namespace actions
+      parameters:
+        - in: path
+          name: action
+          required: true
+          schema:
+            type: string
+            enum: [create, delete]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "202":
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                  status:
+                    type: string
+  /api/v1/jobs/{job_id}:
+    get:
+      summary: Get job status
+      parameters:
+        - in: path
+          name: job_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Job status
+          content:
+            application/json:
+              schema:
+                type: object

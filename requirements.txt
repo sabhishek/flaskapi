@@ -1,0 +1,11 @@
+flask
+flask-restful
+sqlalchemy
+psycopg2-binary
+celery
+redis
+python-dotenv
+pyyaml
+jinja2
+gitpython
+requests
