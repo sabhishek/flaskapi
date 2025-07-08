@@ -84,7 +84,7 @@ def create_app() -> Flask:
     api.add_resource(JobStatusResource, "/jobs/<string:job_id>")
 
     # Serve swagger.yaml
-    from flask import send_from_directory
+    from flask import send_from_directory, jsonify
 
     @app.route("/swagger.yaml")
     def swagger_spec():
@@ -94,5 +94,12 @@ def create_app() -> Flask:
     # Ensure DB tables exist in mock / dev environments
     with app.app_context():
         db.create_all()
+
+    @app.route("/spec")
+    def openapi_spec():
+        root_dir = Path(__file__).resolve().parent.parent
+        with open(root_dir / "swagger.yaml", "r") as fp:
+            spec = yaml.safe_load(fp)
+        return jsonify(spec)
 
     return app
