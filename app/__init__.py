@@ -5,6 +5,7 @@ from flask_restful import Api
 from celery import Celery
 from dotenv import load_dotenv
 import yaml
+from pathlib import Path
 
 # Globals accessible elsewhere
 
@@ -30,7 +31,8 @@ def make_celery(flask_app: Flask) -> Celery:
 
 def load_config():
     # Prefer CONFIG_FILE env var, fallback to config.yaml at project root
-    cfg_path = os.getenv("CONFIG_FILE", os.path.join(os.getcwd(), "config.yaml"))
+    root_dir = Path(__file__).resolve().parent.parent
+    cfg_path = Path(os.getenv("CONFIG_FILE", str(root_dir / "config.yaml")))
     with open(cfg_path, "r") as fp:
         return yaml.safe_load(fp)
 
@@ -86,7 +88,8 @@ def create_app() -> Flask:
 
     @app.route("/swagger.yaml")
     def swagger_spec():
-        return send_from_directory(os.path.dirname(os.getcwd()), "swagger.yaml")
+        root_dir = Path(__file__).resolve().parent.parent
+        return send_from_directory(root_dir, "swagger.yaml")
 
     # Ensure DB tables exist in mock / dev environments
     with app.app_context():
